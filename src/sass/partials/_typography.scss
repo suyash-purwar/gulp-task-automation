@@ -1,0 +1,29 @@
+.title {
+    margin-top: 5rem;
+    font-size: 8rem;
+    color: $white-color;
+}
+
+.paragraph {
+    margin-top: 2.5rem;
+    line-height: 1.6;
+    font-size: 1.5rem;
+    color: $white-color;
+}
+
+.list {
+    margin: 2rem 0 0 4rem;
+    font-size: 1.5rem;
+    color: $white-color;
+}
+
+.list > li {
+    padding-left: 1rem;
+}
+
+.list > ::marker {
+    font-weight: 600;
+    font-size: 2rem;
+    content: "\2714";
+}
+

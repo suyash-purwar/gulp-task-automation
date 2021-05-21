@@ -8,7 +8,8 @@ const imagewebp = require("gulp-webp");
 const browsersync = require("browser-sync").create();
 
 function sendhtml() {
-    return src()
+    return src('src/*.html')
+        .pipe(dest('dist/'))
 }
 
 function compilesass() {
@@ -26,7 +27,7 @@ function jsmin() {
 }
 
 function optimizeimg() {
-    return src('src/assets/img/*.{jpg, png}')
+    return src('src/assets/img/*.{jpg,png}')
         .pipe(imagemin([
             imagemin.mozjpeg({ quality:80, progressive: true}),
             imagemin.optipng({ optimizationLevel: 2})
@@ -35,16 +36,17 @@ function optimizeimg() {
 }
 
 function webpImages() {
-    return src('dist/assets/img/*.{jpg, png}')
+    return src('dist/assets/img/*.{jpg,png}')
         .pipe(imagewebp())
-        .pipe(dest('dist/img/webp'));
+        .pipe(dest('dist/assets/img/webp'));
 }
 
 function watchTask() {
-    watch('src/scss/*.scss', series[compilesass(), browsersyncReload()]);
-    watch('src/js/*.js', series[jsmin(), browsersyncReload()]);
-    watch('src/assets/img/*.{jpg, png}', series[optimizeimg(), browsersyncReload()]);
-    watch('dist/assets/img/*.{jpg, png}', series[webpImages(), browsersyncReload()]);
+    watch('src/*.html', series(sendhtml, browsersyncReload));
+    watch('src/sass/**/*.scss', series(compilesass, browsersyncReload));
+    watch('src/js/*.js', series(jsmin, browsersyncReload));
+    watch('src/assets/img/*.{jpg,png}', series(optimizeimg, browsersyncReload));
+    watch('dist/assets/img/*.{jpg,png}', series(webpImages, browsersyncReload));
 }
 
 function browsersyncServe(cb) {
@@ -63,6 +65,7 @@ function browsersyncReload(cb){
 }
 
 exports.default = series(
+    sendhtml,
     compilesass,
     jsmin,
     optimizeimg,
